@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "968669615282",
+    "project_id": "trguide-b5e27",
+    "storage_bucket": "trguide-b5e27.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968669615282:android:12d519c89644d8377b65ab",
+        "android_client_info": {
+          "package_name": "com.chogiwa.trguide"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRhPmC4J2NP8ucJkUKdXBaY2nlEwOlpa4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
