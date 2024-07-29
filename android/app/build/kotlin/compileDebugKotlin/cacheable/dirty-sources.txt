@@ -1,0 +1,1 @@
+D:\TRGuide\tr_guide\android\app\src\main\kotlin\com\example\tr_guide\MainActivity.kt

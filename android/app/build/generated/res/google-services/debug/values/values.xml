@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">968669615282</string>
+    <string name="google_api_key" translatable="false">AIzaSyCRhPmC4J2NP8ucJkUKdXBaY2nlEwOlpa4</string>
+    <string name="google_app_id" translatable="false">1:968669615282:android:12d519c89644d8377b65ab</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCRhPmC4J2NP8ucJkUKdXBaY2nlEwOlpa4</string>
+    <string name="google_storage_bucket" translatable="false">trguide-b5e27.appspot.com</string>
+    <string name="project_id" translatable="false">trguide-b5e27</string>
+</resources>
