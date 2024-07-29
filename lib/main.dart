@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:tr_guide/auth_page.dart';
+import 'package:tr_guide/mobile_screen_layout.dart';
+import 'package:tr_guide/other_screens/auth_page.dart';
 import 'package:tr_guide/firebase_options.dart';
 
 void main() async {
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const AuthPage(),
+      home: const MobileScreenLayout(),
     );
   }
 }
