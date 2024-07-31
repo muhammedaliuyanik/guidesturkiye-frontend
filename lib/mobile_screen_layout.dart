@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icon.dart';
+import 'package:tr_guide/nav_bar_screens/add_post_screen.dart';
+import 'package:tr_guide/utils/colors.dart';
 import 'package:tr_guide/utils/pages.dart';
 
 class MobileScreenLayout extends StatefulWidget {
@@ -37,46 +40,77 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+        title: const Center(child: Text(
+          style: TextStyle(
+            color: redColor,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+          'GuidesTurkiye')),
+      ),
       body: PageView(
         controller: _pageController,
         onPageChanged: onPageChanged,
         children: homeScreenItems,
       ),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        onPressed: (){},
+        backgroundColor: redColor,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+        ),
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => const AddPostScreen(),
+          );
+        },
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: Icon(Icons.home),
-              onPressed: () => navigationTapped(0),
-              color: _selectedIndex == 0 ? Colors.blue : Colors.grey,
+        height: 70,
+        color: Colors.white,
+        shape: const CircularNotchedRectangle(),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          IconButton(
+            icon: const LineIcon.home(
+              size: 30,
             ),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () => navigationTapped(1),
-              color: _selectedIndex == 1 ? Colors.blue : Colors.grey,
+            onPressed: () => navigationTapped(0),
+            color: _selectedIndex == 0 ? redColor : secondaryColor,
+          ),
+          IconButton(
+            icon: const LineIcon.mapMarker(
+              size: 30,
             ),
-            IconButton(
-              icon: Icon(Icons.notifications),
-              onPressed: () => navigationTapped(2),
-              color: _selectedIndex == 2 ? Colors.blue : Colors.grey,
+            onPressed: () => navigationTapped(1),
+            color: _selectedIndex == 1 ? redColor : secondaryColor,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          IconButton(
+            icon: const LineIcon.bell(
+              size: 30,
             ),
-            IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () => navigationTapped(3),
-              color: _selectedIndex == 3 ? Colors.blue : Colors.grey,
+            onPressed: () => navigationTapped(2),
+            color: _selectedIndex == 2 ? redColor : secondaryColor,
+          ),
+          IconButton(
+            icon: const LineIcon.user(
+              size: 30,
             ),
-
-          ]
-        ),
+            onPressed: () => navigationTapped(3),
+            color: _selectedIndex == 3 ? redColor : secondaryColor,
+          ),
+        ]),
       ),
     );
   }

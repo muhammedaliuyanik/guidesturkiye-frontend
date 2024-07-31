@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                     //google png
                     MySquareTile(
                       imagePath: "assets/images/google.png",
-                      onTap: () => GAuthService().signInWithGoogle(),
+                      onTap: () => AuthService().signInWithGoogle(),
                     ),
                     const SizedBox(
                       width: 20,

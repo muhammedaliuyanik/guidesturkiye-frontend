@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 showSnackBar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -6,4 +7,16 @@ showSnackBar(BuildContext context, String text) {
       content: Text(text),
     ),
   ); //req to show a snackbar
+}
+
+
+//for picking image from gallery or camera(?)
+pickImage(ImageSource source) async {
+  final ImagePicker imagePicker = ImagePicker();
+  XFile? file = await imagePicker.pickImage(source: source);
+  if (file != null) {
+    //return await File(_file.path); //not very accessible
+    return await file.readAsBytes();
+  }
+  //print("No image selected");
 }

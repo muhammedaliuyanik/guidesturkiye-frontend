@@ -37,6 +37,8 @@ dependencies:
     sdk: flutter
   flutter_floating_bottom_bar: ^1.2.0
   google_sign_in: ^6.2.1
+  http: ^1.2.2
+  image_picker: ^1.1.2
   line_icons: ^2.0.3
   uuid: ^4.4.2
 

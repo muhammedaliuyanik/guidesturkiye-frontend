@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:tr_guide/services/auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,24 +8,27 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-void signOut(){
-  FirebaseAuth.instance.signOut();
-}
-
 class _HomeScreenState extends State<HomeScreen> {
+  final AuthService _authService = AuthService();
+
+  void _signOut() async {
+    await _authService.signOut();
+    setState(() {
+      // navigate back to login screen
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      body: const Center(
         child: Text('LOGGED IN'),
-        
-
       ),
-        //sign out button
-        floatingActionButton: FloatingActionButton(
-          onPressed: signOut,
-          child: Icon(Icons.logout),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _signOut,
+        child: const Icon(Icons.logout),
+      ),
     );
   }
 }

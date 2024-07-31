@@ -1,14 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tr_guide/nav_bar_screens/home_screen.dart';
-import 'package:tr_guide/nav_bar_screens/other_2.dart';
-import 'package:tr_guide/nav_bar_screens/other_3.dart';
-import 'package:tr_guide/nav_bar_screens/other_4.dart';
+import 'package:tr_guide/nav_bar_screens/rec_screen.dart';
+import 'package:tr_guide/nav_bar_screens/notification_screen.dart';
 import 'package:tr_guide/nav_bar_screens/profile_screen.dart';
 
 List<Widget> homeScreenItems = [
   const HomeScreen(),
-  const Other2Page(),
-  const Other3Page(),
-  const Other4Page(),
-  const ProfileScreen(),
+  const RecScreen(),
+  const NotificationScreen(),
+  ProfileScreen(
+    uid: FirebaseAuth.instance.currentUser!.uid,
+  ),
 ];
