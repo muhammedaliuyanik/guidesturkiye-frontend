@@ -13,10 +13,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _signOut() async {
     await _authService.signOut();
-    setState(() {
-      // navigate back to login screen
-      Navigator.of(context).popUntil((route) => route.isFirst);
-    });
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
   }
 
   @override
