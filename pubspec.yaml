@@ -37,6 +37,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_floating_bottom_bar: ^1.2.0
+  flutter_native_splash: ^2.4.1
   google_sign_in: ^6.2.1
   http: ^1.2.2
   image_picker: ^1.1.2
@@ -48,6 +49,19 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/png/splash.png
+  color_dark: "#FFFFFF"
+  image_dark: assets/png/splash.png
+
+  android_12:
+    image: assets/png/splash.png
+    icon_background_color: "#FFFFFF"
+    image_dark: assets/png/splash.png
+    icon_background_color_dark: "#FFFFFF"
+
+  web: false
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
@@ -61,7 +75,7 @@ flutter:
   assets:
     - assets/png/
     - assets/videos/
-    - assets/png/
+    - assets/svg/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see
