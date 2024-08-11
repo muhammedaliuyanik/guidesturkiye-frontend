@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
     });
     String res = await AuthService().signInWithGoogle();
     if (res == "success") {
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacementNamed('/home');
     } else {
       setState(() {

@@ -12,6 +12,18 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final StorageMethods _storageMethods = StorageMethods();
 
+
+  // get user details
+  // get user details
+  Future<model.User> getUserDetails() async {
+    User currentUser = _auth.currentUser!;
+
+    DocumentSnapshot documentSnapshot =
+        await _firestore.collection('users').doc(currentUser.uid).get();
+
+    return model.User.fromSnap(documentSnapshot);
+  }
+  
   // logging in with Google
   Future<String> signInWithGoogle() async {
     String res = "Some error occurred";
