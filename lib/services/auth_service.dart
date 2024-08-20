@@ -4,14 +4,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tr_guide/models/user.dart' as model;
 import 'package:tr_guide/services/storage_methods.dart';
 
-
-
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final StorageMethods _storageMethods = StorageMethods();
-
 
   // get user details
   // get user details
@@ -23,7 +20,7 @@ class AuthService {
 
     return model.User.fromSnap(documentSnapshot);
   }
-  
+
   // logging in with Google
   Future<String> signInWithGoogle() async {
     String res = "Some error occurred";
@@ -80,7 +77,11 @@ class AuthService {
 
   // sign out
   Future<void> signOut() async {
-    await _auth.signOut();
-    await _googleSignIn.signOut();
+    try {
+      await _auth.signOut();
+      await _googleSignIn.signOut();
+    } catch (e) {
+      print("Error during sign out: $e");
+    }
   }
 }

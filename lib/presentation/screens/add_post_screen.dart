@@ -26,6 +26,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   bool isLoading = false;
   final TextEditingController _captionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
+  String? selectedLocation;
 
   // autocomplete for the locations
   void placeAutocomplete(String query) async {
@@ -97,6 +98,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
       showSnackBar(context, 'Please select an image before posting.');
       return;
     }
+
+    if (selectedLocation == null) {
+      showSnackBar(context, 'Please select a location.');
+      return;
+    }
+
     setState(() {
       isLoading = true;
     });
@@ -107,6 +114,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         uid,
         username,
         profImage,
+        location: selectedLocation!,
       );
       if (res == "success") {
         setState(() {
@@ -135,6 +143,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       _file = null;
       _captionController.clear();
       _locationController.clear();
+      selectedLocation = null;
     });
   }
 
@@ -237,20 +246,24 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   suffixIcon: const Icon(Icons.search, color: Colors.grey),
                 ),
               ),
-              
               const Divider(
                 color: Colors.grey,
                 thickness: 1,
               ),
-              // Use ListView.builder with shrinkWrap: true
               ListView.builder(
                 shrinkWrap: true,
-                physics:
-                    const NeverScrollableScrollPhysics(), // Prevent the ListView from scrolling independently
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: placePredictions.length,
                 itemBuilder: (context, index) => LocationListTile(
                   location: placePredictions[index].description!,
-                  press: () {},
+                  press: () {
+                    setState(() {
+                      _locationController.text =
+                          placePredictions[index].description!;
+                      selectedLocation = placePredictions[index].description;
+                      placePredictions.clear();
+                    });
+                  },
                 ),
               ),
               const SizedBox(height: 20),
@@ -262,7 +275,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       final user = userProvider.getUser;
 
                       postImage(
-                        user.uid,
+                        user!.uid,
                         user.name,
                         user.photoUrl,
                       );
