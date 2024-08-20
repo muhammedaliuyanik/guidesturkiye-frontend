@@ -27,15 +27,15 @@ class Post {
     var snapshot = snap.data() as Map<String, dynamic>;
 
     return Post(
-      name: snapshot["name"],
+      name: snapshot["name"] ?? "",
       uid: snapshot["uid"],
-      photoUrl: snapshot["photoUrl"],
-      postPhotoUrl: snapshot["postPhotoUrl"],
-      likes: snapshot["likes"],
+      photoUrl: snapshot["photoUrl"] ??"",
+      postPhotoUrl: snapshot["postPhotoUrl"] ??"",
+      likes: snapshot["likes"]?? [],
       datePublished: (snapshot["datePublished"] as Timestamp).toDate(),
-      location: snapshot["location"],
-      postId: snapshot["postId"],
-      description: snapshot["description"],
+      location: snapshot["location"] ?? "",
+      postId: snapshot["postId"]?? "",
+      description: snapshot["description"] ?? "",
     );
   }
 
@@ -51,3 +51,18 @@ class Post {
         "description": description,
       };
 }
+
+class PostService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Method to get post count by user ID
+  Future<int> getUserPostCount(String uid) async {
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('posts')
+        .where('uid', isEqualTo: uid)
+        .get();
+
+    return querySnapshot.docs.length;
+  }
+}
+

@@ -21,13 +21,14 @@ class User {
     var snapshot = snap.data() as Map<String, dynamic>;
 
     return User(
-      name: snapshot["name"],
-      uid: snapshot["uid"],
-      email: snapshot["email"],
-      photoUrl: snapshot["photoUrl"],
-      followers: snapshot["followers"],
-      following: snapshot["following"],
+      name: snapshot["name"] ?? '',
+      uid: snapshot["uid"] ?? '',
+      email: snapshot["email"] ?? '',
+      photoUrl: snapshot["photoUrl"] ?? '',
+      followers: snapshot["followers"] ?? [],
+      following: snapshot["following"] ?? [],
     );
+
   }
 
   Map<String, dynamic> toJson() => {
