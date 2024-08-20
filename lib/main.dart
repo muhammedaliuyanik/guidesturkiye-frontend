@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
+import 'package:tr_guide/core/providers/notification_provider.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tr_guide/core/providers/theme_provider.dart';
 import 'package:tr_guide/core/providers/user_provider.dart';
@@ -19,7 +20,7 @@ void main() async {
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  await Future.delayed(const Duration(seconds: 5)); //cok mu uzun oldu
+  await Future.delayed(const Duration(seconds: 2)); //cok mu uzun oldu
 
   FlutterNativeSplash.remove();
 
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => UnreadNotificationProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

@@ -6,8 +6,7 @@ class UserProvider with ChangeNotifier {
   User? _user;
   final AuthService _authMethods = AuthService();
 
-  User get getUser =>
-      _user!; // Null olabileceğini belirttik//tekrar bak User? _user; olabilir
+  User? get getUser => _user;
 
   Future<void> refreshUser() async {
     User user = await _authMethods.getUserDetails();
@@ -15,3 +14,4 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+
