@@ -9,7 +9,7 @@ List<Widget> homeScreenItems = [
   const HomeScreen(),
   const RecScreen(),
   const NotificationScreen(),
-  ProfileScreen(
-    uid: FirebaseAuth.instance.currentUser!.uid,
+  const ProfileScreen(
+    //uid: FirebaseAuth.instance.currentUser!.uid,
   ),
 ];
