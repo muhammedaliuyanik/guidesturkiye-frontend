@@ -55,7 +55,6 @@ class _OnboardingViewState extends State<OnboardingView> {
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(
                                 0.2), // Semi-transparent background
-                            
                           ),
                           child: Column(
                             children: [
