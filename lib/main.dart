@@ -39,7 +39,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
-        ChangeNotifierProvider(create: (context) => UnreadNotificationProvider()),
+        ChangeNotifierProvider(
+            create: (context) => UnreadNotificationProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
             title: 'GuidesTurkiye',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
+              fontFamily: 'Dm Sans',
               colorScheme: ColorScheme.fromSeed(seedColor: redColor),
               useMaterial3: true,
             ),
