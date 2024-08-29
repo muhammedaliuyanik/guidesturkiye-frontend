@@ -97,18 +97,22 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           ),
         ),
         actions: [
-          if (_selectedIndex == 3) // Show settings icon only on profile screen
+          if (_selectedIndex == 3) 
             IconButton(
-              icon: const Icon(LineIcons.cog, size: 30, color: redColor),
-              onPressed: () {
-                // Navigate to settings screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SettingsScreen()),
-                );
-              },
-            ),
+                icon: Image.asset(
+                  'assets/icons/settings_icon.png',
+                  height: 23,
+                  color: redColor,
+                ),
+                onPressed: (
+                        // Show settings screen
+                        ) =>
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsScreen(),
+                      ),
+                    )),
         ],
       ),
       body: PageView(
@@ -116,25 +120,29 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
         onPageChanged: onPageChanged,
         children: homeScreenItems,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: redColor,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(30.0)),
-        ),
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) => const AddPostScreen(),
-          );
-        },
-        tooltip: 'Add Post',
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
+          backgroundColor: redColor,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(30.0)),
+          ),
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => const AddPostScreen(),
+            );
+          },
+          tooltip: 'Add Post',
+          child: IconButton(
+            icon: Image.asset(
+              'assets/icons/plus_icon.png',
+              height: 23,
+              color: Colors.white,
+            ),
+            onPressed: null,
+          )),
       bottomNavigationBar: BottomAppBar(
         height: 70,
         color: Colors.white,
@@ -143,27 +151,29 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: const LineIcon.home(
-                size: 30,
+              icon: Image.asset(
+                'assets/icons/home_icon.png',
+                height: 27,
+                color: _selectedIndex == 0 ? redColor : secondaryColor,
               ),
               onPressed: () => navigationTapped(0),
-              color: _selectedIndex == 0 ? redColor : secondaryColor,
             ),
             IconButton(
-              icon: const LineIcon.mapMarker(
-                size: 30,
+              icon: Image.asset(
+                'assets/icons/marker_icon.png',
+                height: 25,
+                color: _selectedIndex == 1 ? redColor : secondaryColor,
               ),
               onPressed: () => navigationTapped(1),
-              color: _selectedIndex == 1 ? redColor : secondaryColor,
             ),
-            const SizedBox(
-              width: 10,
-            ),
+            const SizedBox(width: 10),
             IconButton(
               icon: Stack(
                 children: [
-                  const LineIcon.bell(
-                    size: 30,
+                  Image.asset(
+                    'assets/icons/bell_icon.png',
+                    height: 23,
+                    color: _selectedIndex == 2 ? redColor : secondaryColor,
                   ),
                   if (unreadNotificationProvider.unreadCount > 0)
                     Positioned(
@@ -191,14 +201,14 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
                 ],
               ),
               onPressed: () => navigationTapped(2),
-              color: _selectedIndex == 2 ? redColor : secondaryColor,
             ),
             IconButton(
-              icon: const LineIcon.user(
-                size: 30,
+              icon: Image.asset(
+                'assets/icons/user_icon.png',
+                height: 23,
+                color: _selectedIndex == 3 ? redColor : secondaryColor,
               ),
               onPressed: () => navigationTapped(3),
-              color: _selectedIndex == 3 ? redColor : secondaryColor,
             ),
           ],
         ),

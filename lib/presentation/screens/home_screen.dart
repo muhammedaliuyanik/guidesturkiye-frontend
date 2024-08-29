@@ -17,63 +17,88 @@ class _HomeScreenState extends State<HomeScreen> {
     const size = 600;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
-          const SizedBox(height: 10),
           //stories ama stories yok
-          StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('users').snapshots(),
-            builder: (context,
-                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(94, 193, 218, 235),
+                  Color.fromARGB(92, 255, 255, 255),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: StreamBuilder(
+              stream:
+                  FirebaseFirestore.instance.collection('users').snapshots(),
+              builder: (context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-              return SizedBox(
-                height: 120,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (ctx, index) {
-                    var user = snapshot.data!.docs[index].data();
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.purple,
-                                  Colors.red,
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+                return SizedBox(
+                  height: 92,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (ctx, index) {
+                      var user = snapshot.data!.docs[index].data();
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                // const SizedBox(width: 5),
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.purple,
+                                        Colors.red,
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.all(2),
+                                  child: CircleAvatar(
+                                    radius: 35,
+                                    backgroundImage:
+                                        NetworkImage(user['photoUrl']),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              user['name'],
+                              style: const TextStyle(
+                                fontSize: 11,
                               ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
-                            padding: const EdgeInsets.all(3),
-                            child: CircleAvatar(
-                              radius: 40,
-                              backgroundImage: NetworkImage(user['photoUrl']),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            user['name'],
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
           ),
-          const Divider(),
+          const Divider(
+            color: Color.fromARGB(92, 158, 158, 158),
+          ),
           // posts
           Expanded(
             child: StreamBuilder(

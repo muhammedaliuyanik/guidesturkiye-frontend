@@ -1,9 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tr_guide/core/providers/user_provider.dart';
 import 'package:tr_guide/models/post.dart';
+import 'package:tr_guide/presentation/widgets/travel_tab.dart';
+import 'package:tr_guide/utils/colors.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -43,38 +44,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween, // Elemanları hizalamak için
               children: [
-                //blue border
-                Container(
-                  padding: const EdgeInsets.all(2.5),
-                  decoration: const BoxDecoration(
-                    color: Colors.blue, 
-                    shape: BoxShape.circle,
-                  ),
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(user!.photoUrl),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                // name email
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      user.name,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                    // Profil fotoğrafı
+                    Container(
+                      padding: const EdgeInsets.all(3.0),
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircleAvatar(
+                        radius: 60, // Profil fotoğrafı boyutunu artırdık
+                        backgroundImage: NetworkImage(user!.photoUrl),
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      user.email,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
+                    const SizedBox(width: 20),
+                    // İsim ve e-posta
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user.name,
+                          style: const TextStyle(
+                            fontSize: 20, // Metin boyutunu küçülttük
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          user.email,
+                          style: const TextStyle(
+                            fontSize: 14, // Metin boyutunu küçülttük
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        // Follow / Edit Profile Button
+                        ElevatedButton(
+                          onPressed: () {
+                            // Follow veya Edit Profile butonu işlevi
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                redColor, // Butonun arka plan rengini ayarladık
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30,
+                                vertical:
+                                    10), // Daha ince ve uzun bir görünüm için padding ayarı
+                            minimumSize: const Size(100,
+                                40), // Butonun minimum genişlik ve yükseklik ayarları
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  8), // Köşeleri yuvarlatıyoruz
+                            ),
+                          ),
+                          child: const Text(
+                            'Follow', // Buton metni
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),
@@ -92,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
           const SizedBox(height: 20),
-          // sliding segmented control package
+          // Sliding segmented control
           CustomSlidingSegmentedControl<int>(
             initialValue: _selectedIndex,
             children: const {
@@ -117,16 +151,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
           ),
           const SizedBox(height: 20),
-          // Content Section
+          // possts 
           Expanded(
             child: IndexedStack(
               index: _selectedIndex,
-              children: const [
-                MyPhotosTab(
-                  uid: 'user.uid',
-                ),
-                Center(child: Text('Visited Places')),
-                Center(child: Text('Travel Plan')),
+              children: [
+                const Center(child: Text('My Photos')),
+                const Center(child: Text('Visited Places')),
+                TravelPlanTab(uid: user.uid), // Seyahat planlarını göster
               ],
             ),
           ),
@@ -154,59 +186,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class MyPhotosTab extends StatelessWidget {
-  final String uid;
-
-  const MyPhotosTab({super.key, required this.uid});
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('posts')
-          .where('uid', isEqualTo: uid)
-          .snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text("No posts found"));
-        }
-
-        print(
-            'Data fetched: ${snapshot.data!.docs.length} documents found'); // Debugging line
-
-        var posts = snapshot.data!.docs;
-
-        return GridView.builder(
-          padding: const EdgeInsets.all(8.0),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 5.0,
-            mainAxisSpacing: 5.0,
-          ),
-          itemCount: posts.length,
-          itemBuilder: (context, index) {
-            var post = posts[index].data() as Map<String, dynamic>;
-            print('Post data: $post');
-            return Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(post['postPhotoUrl']),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }

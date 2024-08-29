@@ -61,7 +61,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                               Text(
                                 item.title,
                                 style: const TextStyle(
-                                  fontSize: 45,
+                                  fontSize: 43,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
@@ -146,22 +146,32 @@ class _OnboardingViewState extends State<OnboardingView> {
     return Container(
       decoration: const BoxDecoration(
         color: redColor,
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+        borderRadius: BorderRadius.all(Radius.circular(30)),
       ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      height: 50,
-      child: TextButton(
-          child: const Text("Get Started",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
+      height: 65,
+      child: Center(
+        child: TextButton(
+          child: const Text(
+            "Get Started",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
           onPressed: () async {
             final pres = await SharedPreferences.getInstance();
             pres.setBool("onboarding", true);
 
             if (!mounted) return;
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const AuthPage()));
-          }),
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AuthPage()),
+            );
+          },
+        ),
+      ),
     );
   }
 }

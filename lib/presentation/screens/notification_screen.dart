@@ -78,9 +78,9 @@ class NotificationScreen extends StatelessWidget {
                         Icon(
                           getNotificationIcon(notiData['type']),
                           color: notiData['type'] == 'like'
-                              ? Color.fromARGB(255, 228, 113, 105)
+                              ? const Color.fromARGB(255, 228, 113, 105)
                               : notiData['type'] == 'follow'
-                                  ? Color.fromARGB(144, 33, 149, 243)
+                                  ? const Color.fromARGB(144, 33, 149, 243)
                                   : Colors.orange,
                         ),
                         const SizedBox(width: 8), // Boşluk eklemek için
