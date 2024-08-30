@@ -161,6 +161,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.white,
         leading: Padding(
           padding: const EdgeInsets.only(left: defaultPadding),
@@ -174,7 +175,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         ),
         title: const Text(
           "New Post",
-          style: TextStyle(color: redColor),
+          style: TextStyle(color: redColor, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -246,10 +247,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   suffixIcon: const Icon(Icons.search, color: Colors.grey),
                 ),
               ),
-              const Divider(
-                color: Colors.grey,
-                thickness: 1,
-              ),
+              // const Divider(
+              //   color: Colors.grey,
+              //   thickness: 1,
+              // ),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -266,35 +267,42 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 175),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    try {
-                      final user = userProvider.getUser;
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 50, right: 50),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      try {
+                        final user = userProvider.getUser;
 
-                      postImage(
-                        user!.uid,
-                        user.name,
-                        user.photoUrl,
-                      );
-                    } catch (e) {
-                      // Handle the exception (e.g., show an error message)
-                      showSnackBar(context,
-                          'User data is not available. Please try again later.');
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: redColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+                        postImage(
+                          user!.uid,
+                          user.name,
+                          user.photoUrl,
+                        );
+                      } catch (e) {
+                        // Handle the exception (e.g., show an error message)
+                        showSnackBar(context,
+                            'User data is not available. Please try again later.');
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 2, vertical: 14),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                  ),
-                  child: const Text(
-                    "Post",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    child: const Text(
+                      "Post",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),

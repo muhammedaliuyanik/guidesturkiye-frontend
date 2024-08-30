@@ -82,6 +82,9 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     if (_selectedIndex == 1) {
       appBarTitle = 'Recommendation';
     }
+    if (_selectedIndex == 2) {
+      appBarTitle = 'Notifications';
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -128,10 +131,11 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
             borderRadius: BorderRadius.all(Radius.circular(30.0)),
           ),
           onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) => const AddPostScreen(),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AddPostScreen(),
+              ),
             );
           },
           tooltip: 'Add Post',

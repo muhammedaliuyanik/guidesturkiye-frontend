@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:tr_guide/core/providers/notification_provider.dart';
@@ -16,6 +15,7 @@ class NotificationScreen extends StatelessWidget {
         Provider.of<UnreadNotificationProvider>(context);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('notifications')
@@ -43,14 +43,14 @@ class NotificationScreen extends StatelessWidget {
               var isRead = notiData['isRead'] ?? false;
               var notificationTime = notiData['datePublished'].toDate();
 
-              IconData getNotificationIcon(String type) {
+              IconData? getNotificationIcon(String type) {
                 switch (type) {
                   case 'like':
                     return Icons.favorite;
                   case 'follow':
                     return Icons.person_add;
-                  case 'comment':
-                    return Icons.comment;
+                  case 'travel_plan':
+                    return null; // No icon for travel_plan notifications
                   default:
                     return Icons.notifications;
                 }
@@ -59,44 +59,72 @@ class NotificationScreen extends StatelessWidget {
               String getNotificationText(String type) {
                 switch (type) {
                   case 'like':
-                    return 'liked your post';
+                    return 'liked your post!';
                   case 'follow':
-                    return 'started following you';
-                  case 'comment':
-                    return 'commented on your post';
+                    return 'started following you!';
+                  case 'travel_plan':
+                    return 'Your travel recommendations are ready!';
                   default:
-                    return 'sent you a notification';
+                    return 'sent you a notification!';
+                }
+              }
+
+              String getTimeAgo(DateTime date) {
+                final difference = DateTime.now().difference(date);
+                if (difference.inMinutes < 60) {
+                  return '${difference.inMinutes}m ago';
+                } else if (difference.inHours < 24) {
+                  return '${difference.inHours}h ago';
+                } else {
+                  return DateFormat('MMM d').format(date);
                 }
               }
 
               return Column(
                 children: [
                   ListTile(
-                    leading: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          getNotificationIcon(notiData['type']),
-                          color: notiData['type'] == 'like'
-                              ? const Color.fromARGB(255, 228, 113, 105)
-                              : notiData['type'] == 'follow'
-                                  ? const Color.fromARGB(144, 33, 149, 243)
-                                  : Colors.orange,
-                        ),
-                        const SizedBox(width: 8), // Boşluk eklemek için
-                        CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(notiData['userProfileImg']),
-                        ),
-                      ],
-                    ),
-                    title: Text(notiData['name']),
+                    leading: notiData['type'] == 'travel_plan'
+                        ? CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(notiData['userProfileImg']),
+                          )
+                        : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                getNotificationIcon(notiData['type']),
+                                color: notiData['type'] == 'like'
+                                    ? const Color.fromARGB(255, 228, 113, 105)
+                                    : notiData['type'] == 'follow'
+                                        ? const Color.fromARGB(
+                                            144, 33, 149, 243)
+                                        : Colors.orange,
+                              ),
+                              const SizedBox(width: 8),
+                              CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(notiData['userProfileImg']),
+                              ),
+                            ],
+                          ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (notiData['type'] != 'travel_plan')
+                          Text(
+                            notiData['name'],
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         Text(getNotificationText(notiData['type'])),
+                      ],
+                    ),
+                    tileColor: isRead ? Colors.white : Colors.grey[300],
+                    trailing: Column(
+                      children: [
+                        const Icon(Icons.more_horiz, color: Colors.red),
+                        const SizedBox(height: 4),
                         Text(
-                          '${DateFormat.yMMMd().format(notificationTime)} at ${DateFormat.Hm().format(notificationTime)}',
+                          getTimeAgo(notificationTime),
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
@@ -104,14 +132,13 @@ class NotificationScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    tileColor: isRead ? Colors.white : Colors.grey[300],
                     onTap: () {
                       notiData.reference.update({'isRead': true});
                     },
                   ),
                   const Divider(
                     thickness: 0.5,
-                  ), // Her bildirimin altına bir çizgi ekle
+                  ),
                 ],
               );
             },

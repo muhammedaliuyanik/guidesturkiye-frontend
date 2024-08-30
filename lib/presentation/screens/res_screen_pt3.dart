@@ -47,6 +47,23 @@ class _ResScreenPt3State extends State<ResScreenPt3>
       throw Exception('Failed to load recommendations');
     }
   }
+  //????????????????????????????????????????????
+  Future<void> addNotification(String uid, String type, String postId,
+      String name, String userProfileImg) async {
+    await FirebaseFirestore.instance
+        .collection('notifications')
+        .doc(uid)
+        .collection('userNotifications')
+        .add({
+      'type': type,
+      'postId': postId,
+      'name': name,
+      'userProfileImg': userProfileImg,
+      'datePublished': Timestamp.now(),
+      'isRead': false,
+    });
+  }
+
 
   void _addTravelPlanToProfile() async {
     final user = Provider.of<UserProvider>(context, listen: false).getUser;
@@ -72,6 +89,23 @@ class _ResScreenPt3State extends State<ResScreenPt3>
         'createdAt': Timestamp.now(),
       });
 
+      // Fetch user's name and profile image for the notification
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      var name = userSnap['name'];
+      var userProfileImg = userSnap['photoUrl'];
+
+      // Add a notification for the travel plan
+      await addNotification(
+        user.uid,
+        'travel_plan',
+        '', // No specific postId associated
+        name,
+        userProfileImg,
+      );
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Travel Plan added successfully")),
@@ -90,6 +124,7 @@ class _ResScreenPt3State extends State<ResScreenPt3>
       }
     }
   }
+
 
   void _goToHomepage() {
     Navigator.of(context).popUntil((route) => route.isFirst);
@@ -144,8 +179,9 @@ class _ResScreenPt3State extends State<ResScreenPt3>
           CustomSlidingSegmentedControl<int>(
             initialValue: _selectedIndex,
             children: const {
-              0: Text('Recommendations'),
-              1: Text('    Top Rated    '),
+              0: Text('Recommendations', style: TextStyle(color: Colors.black)),
+              1: Text('    Top Rated    ',
+                  style: TextStyle(color: Colors.black)),
             },
             decoration: BoxDecoration(
               color: Colors.white,
@@ -165,32 +201,38 @@ class _ResScreenPt3State extends State<ResScreenPt3>
               });
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           Expanded(
             child: IndexedStack(
               index: _selectedIndex,
-              children:  [
+              children: [
                 buildRecommendationsTab(),
-                Center(child: Text('Top Rated')),
+                const Center(child: Text('Top Rated')),
               ],
             ),
           ),
+          ElevatedButton(
+            onPressed: _isAdded ? _goToHomepage : _addTravelPlanToProfile,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(28),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, right:10),
+              child: Text(
+                _isAdded ? 'Go Homepage' : 'Add My Travel Plan',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
         ],
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: _isAdded ? _goToHomepage : _addTravelPlanToProfile,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: redColor,
-            padding: const EdgeInsets.symmetric(vertical: 17),
-          ),
-          child: Text(
-            _isAdded ? 'Go Homepage' : 'Add My Travel Plan',
-            style: const TextStyle(
-                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
       ),
     );
   }
@@ -233,11 +275,6 @@ class _ResScreenPt3State extends State<ResScreenPt3>
     );
   }
 
-
-
-
-
-
   Widget buildLocationCard(
       String title, String city, String imageUrl, Map<String, dynamic> place) {
     final isSelected = selectedRecommendations.contains(place);
@@ -251,50 +288,82 @@ class _ResScreenPt3State extends State<ResScreenPt3>
           }
         });
       },
-      child: Card(
-        elevation: isSelected ? 6 : 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                    ),
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                    ),
-                  ),
-                  if (isSelected)
-                    const Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Icon(
-                        Icons.check_circle,
-                        color: Colors.greenAccent,
-                        size: 24,
-                      ),
-                    ),
-                ],
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              image: DecorationImage(
+                image: NetworkImage(imageUrl),
+                fit: BoxFit.cover,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(title,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          if (isSelected)
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Center(
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.white,
+                  size: 50,
+                ),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(city, style: const TextStyle(color: Colors.grey)),
+          Positioned(
+            bottom: 8,
+            left: 8,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    shadows: [
+                      // Shadow(
+                      //   blurRadius: 10.0,
+                      //   color: Colors.black,
+                      //   offset: Offset(2.0, 2.0),
+                      // ),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      '•',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      city,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        shadows: [
+                          // Shadow(
+                          //   blurRadius: 10.0,
+                          //   color: Colors.black,
+                          //   offset: Offset(2.0, 2.0),
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

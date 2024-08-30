@@ -88,6 +88,7 @@ Future<String> deletePost(String postId) async {
     }
     return res;
   }
+  
 Future<void> followUser(String uid, String followId) async {
     try {
       DocumentSnapshot snap =
@@ -140,7 +141,7 @@ Future<void> followUser(String uid, String followId) async {
         'userProfileImg': userProfileImg,
         'postId': postId,
         'datePublished': DateTime.now(),
-        'isRead': false, // Yeni alan
+        'isRead': false, 
       });
     } catch (e) {
       print(e.toString());

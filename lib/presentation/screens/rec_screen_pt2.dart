@@ -61,10 +61,9 @@ class _RecScreenPt2State extends State<RecScreenPt2> {
       MaterialPageRoute(builder: (context) => const LoadingScreen()),
     );
 
-     //delay
+    //delay
     await Future.delayed(const Duration(seconds: 3));
 
-    
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -75,20 +74,22 @@ class _RecScreenPt2State extends State<RecScreenPt2> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        centerTitle: true, 
+        centerTitle: true,
         title: const Text(
           'Recommendation',
           style: TextStyle(color: redColor, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: redColor,),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: redColor,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
