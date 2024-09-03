@@ -20,7 +20,7 @@ class ResScreenPt3 extends StatefulWidget {
 class _ResScreenPt3State extends State<ResScreenPt3>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  late Future<List<dynamic>> _recommendations;
+  late Future<Map<String, dynamic>> _recommendations;
   List<Map<String, dynamic>> selectedRecommendations = [];
   bool _isAdded = false;
   int _selectedIndex = 0;
@@ -32,12 +32,14 @@ class _ResScreenPt3State extends State<ResScreenPt3>
     _recommendations = _fetchRecommendations();
   }
 
-  Future<List<dynamic>> _fetchRecommendations() async {
+Future<Map<String, dynamic>> _fetchRecommendations() async {
     final url = 'http://52.59.198.77:5000/getRecommendation';
     final response = await http.post(
       Uri.parse(url),
       headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"liked_location_ids": widget.selectedPlaceIds}),
+      body: jsonEncode({
+        "liked_location_ids": widget.selectedPlaceIds,
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -47,6 +49,7 @@ class _ResScreenPt3State extends State<ResScreenPt3>
       throw Exception('Failed to load recommendations');
     }
   }
+
   //????????????????????????????????????????????
   Future<void> addNotification(String uid, String type, String postId,
       String name, String userProfileImg) async {
@@ -238,7 +241,7 @@ class _ResScreenPt3State extends State<ResScreenPt3>
   }
 
   Widget buildRecommendationsTab() {
-    return FutureBuilder<List<dynamic>>(
+    return FutureBuilder<Map<String, dynamic>>(
       future: _recommendations,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -249,7 +252,7 @@ class _ResScreenPt3State extends State<ResScreenPt3>
           return const Center(child: Text('No recommendations available.'));
         }
 
-        final recommendations = snapshot.data!;
+        final recommendations = snapshot.data!['recommended_locations'];
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: GridView.builder(
@@ -280,7 +283,7 @@ class _ResScreenPt3State extends State<ResScreenPt3>
 
   //top rated
   Widget buildTopRatedTab() {
-    return FutureBuilder<List<dynamic>>(
+    return FutureBuilder<Map<String, dynamic>>(
       future: _recommendations,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -291,7 +294,7 @@ class _ResScreenPt3State extends State<ResScreenPt3>
           return const Center(child: Text('No recommendations available.'));
         }
 
-        final recommendations = snapshot.data!;
+        final recommendations = snapshot.data!['top_rated_places'];
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: GridView.builder(

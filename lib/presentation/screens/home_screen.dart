@@ -22,7 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Kullanıcıların hikayelerini gösteren bölüm
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: const BoxDecoration(
@@ -47,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
                   child: SizedBox(
                     height: 92,
                     child: ListView.builder(
@@ -139,8 +138,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (ctx, index) => PostCard(
-                      post: Post.fromSnap(snapshot.data!.docs[index]),),
-                    );
+                    post: Post.fromSnap(snapshot.data!.docs[index]),
+                  ),
+                );
               },
             ),
           ),
