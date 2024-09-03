@@ -14,18 +14,18 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool isDarkMode =
-      false;
+  bool isDarkMode = false;
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).getUser;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
           'Settings',
-          style: TextStyle(color: redColor),
+          style: TextStyle(color: redColor, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -73,26 +73,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       context,
                       MaterialPageRoute(builder: (context) => const AuthPage()),
                     );
-                    
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: redColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    //padding: const EdgeInsets.symmetric(horizontal: 30),
                   ),
-                  child: const Text('Logout',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+                  child: const Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      'Logout',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 30),
-            // 
+            //
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               color: Colors.grey[200],

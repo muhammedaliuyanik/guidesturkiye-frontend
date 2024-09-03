@@ -1,26 +1,39 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tr_guide/core/providers/user_provider.dart';
 import 'package:tr_guide/models/post.dart';
-import 'package:tr_guide/presentation/widgets/travel_tab.dart';
+import 'package:tr_guide/presentation/widgets/profile_widgets/my_photos_tab.dart';
+import 'package:tr_guide/presentation/widgets/profile_widgets/travel_tab.dart';
+import 'package:tr_guide/presentation/widgets/profile_widgets/visited_tab.dart';
 import 'package:tr_guide/utils/colors.dart';
+import 'package:tr_guide/utils/utils.dart';
+import 'package:tr_guide/services/firestore_methods.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final String uid;
+  const ProfileScreen({super.key, required this.uid});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int postCount = 0;
+  bool isLoading = false;
+  var userData = {};
+  int followers = 0;
+  int following = 0;
+  bool isFollowing = false;
   int _selectedIndex = 0;
+  int postCount = 0;
 
   @override
   void initState() {
     super.initState();
     _fetchPostCount();
+    getData();
   }
 
   void _fetchPostCount() async {
@@ -32,139 +45,175 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  Future<void> getData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uid)
+          .get();
+
+      if (userSnap.exists) {
+        setState(() {
+          userData = userSnap.data()!;
+          //postun lengthi
+          // posts = userData['posts']?.length ?? 0; //calismadi
+          followers = userData['followers'].length;
+          following = userData['following'].length;
+          isFollowing = userData['followers']
+              .contains(FirebaseAuth.instance.currentUser!.uid);
+        });
+      }
+    } catch (e) {
+      showSnackBar(
+        context,
+        e.toString(),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).getUser;
+    final isMyProfile = FirebaseAuth.instance.currentUser!.uid == widget.uid;
 
-    return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          // User Profile Section
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween, // Elemanları hizalamak için
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            backgroundColor: Colors.white,
+            body: Column(
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Profil fotoğrafı
-                    Container(
-                      padding: const EdgeInsets.all(3.0),
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        shape: BoxShape.circle,
-                      ),
-                      child: CircleAvatar(
-                        radius: 60, // Profil fotoğrafı boyutunu artırdık
-                        backgroundImage: NetworkImage(user!.photoUrl),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    // İsim ve e-posta
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          user.name,
-                          style: const TextStyle(
-                            fontSize: 20, // Metin boyutunu küçülttük
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          user.email,
-                          style: const TextStyle(
-                            fontSize: 14, // Metin boyutunu küçülttük
-                            color: Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        // Follow / Edit Profile Button
-                        ElevatedButton(
-                          onPressed: () {
-                            // Follow veya Edit Profile butonu işlevi
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                redColor, // Butonun arka plan rengini ayarladık
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30,
-                                vertical:
-                                    10), // Daha ince ve uzun bir görünüm için padding ayarı
-                            minimumSize: const Size(100,
-                                40), // Butonun minimum genişlik ve yükseklik ayarları
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  8), // Köşeleri yuvarlatıyoruz
+                Padding(
+                  padding: const EdgeInsets.only(left: 22, right: 22),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 40),
+                            Text(
+                              userData['name'] ?? '',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                          child: const Text(
-                            'Follow', // Buton metni
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                        )
-                      ],
-                    ),
+                            const SizedBox(height: 3),
+                            Text(
+                              userData['email'] ?? '',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: profileColor,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            const SizedBox(height: 30),
+                            if (!isMyProfile) // sadce baska kullanıcılara goster
+                              ElevatedButton(
+                                onPressed: () async {
+                                  await FirestoreMethods().followUser(
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                    widget.uid,
+                                  );
+                                  setState(() {
+                                    isFollowing = !isFollowing;
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      isFollowing ? Colors.grey : redColor,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 30,
+                                    vertical: 0,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: Text(
+                                  isFollowing ? 'Unfollow' : 'Follow',
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Container(
+                        padding: const EdgeInsets.all(3.0),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 25, 102, 165),
+                          shape: BoxShape.circle,
+                        ),
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage:
+                              NetworkImage(userData['photoUrl'] ?? ''),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildStatColumn('Following', following.toString()),
+                    _buildStatColumn('Posts', postCount.toString()),
+                    _buildStatColumn('Followers', followers.toString()),
                   ],
+                ),
+                const SizedBox(height: 25),
+                CustomSlidingSegmentedControl<int>(
+                  initialValue: _selectedIndex,
+                  children: const {
+                    0: Text(' My Photos '),
+                    1: Text(' Visited Places '),
+                    2: Text(' Travel Plan '),
+                  },
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 223, 223, 223),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  thumbDecoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  onValueChanged: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: IndexedStack(
+                    index: _selectedIndex,
+                    children: [
+                      MyPhotosTab(uid: widget.uid),
+                      VisitedPlacesTab(uid: widget.uid),
+                      TravelPlanTab(uid: widget.uid),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 20),
-          //following posts followers
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildStatColumn('Following', user.following.length.toString()),
-              _buildStatColumn('Posts', postCount.toString()),
-              _buildStatColumn('Followers', user.followers.length.toString()),
-            ],
-          ),
-          const SizedBox(height: 20),
-          // Sliding segmented control
-          CustomSlidingSegmentedControl<int>(
-            initialValue: _selectedIndex,
-            children: const {
-              0: Text('My Photos'),
-              1: Text('Visited Places'),
-              2: Text('Travel Plan'),
-            },
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            thumbDecoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            onValueChanged: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-          ),
-          const SizedBox(height: 20),
-          // possts 
-          Expanded(
-            child: IndexedStack(
-              index: _selectedIndex,
-              children: [
-                const Center(child: Text('My Photos')),
-                const Center(child: Text('Visited Places')),
-                TravelPlanTab(uid: user.uid), // Seyahat planlarını göster
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 
   Column _buildStatColumn(String label, String count) {
@@ -182,7 +231,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           label,
           style: const TextStyle(
             fontSize: 16,
-            color: Colors.grey,
+            color: profileColor,
           ),
         ),
       ],

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tr_guide/models/post.dart';
+import 'package:tr_guide/presentation/screens/profile_screen.dart';
 import 'package:tr_guide/presentation/widgets/post_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          //stories ama stories yok
+          // Kullanıcıların hikayelerini gösteren bölüm
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: const BoxDecoration(
@@ -57,25 +59,38 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Row(
                               children: [
-                                // const SizedBox(width: 5),
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Colors.purple,
-                                        Colors.red,
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
+                                GestureDetector(
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.purple,
+                                          Colors.red,
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                    ),
+                                    padding: const EdgeInsets.all(2),
+                                    child: CircleAvatar(
+                                      radius: 35,
+                                      backgroundImage:
+                                          NetworkImage(user['photoUrl']),
                                     ),
                                   ),
-                                  padding: const EdgeInsets.all(2),
-                                  child: CircleAvatar(
-                                    radius: 35,
-                                    backgroundImage:
-                                        NetworkImage(user['photoUrl']),
-                                  ),
+                                  // Profil ekranına yönlendirme
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProfileScreen(
+                                          uid: snapshot.data!.docs[index]
+                                              .id, // Post sahibinin UID'si
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -99,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const Divider(
             color: Color.fromARGB(92, 158, 158, 158),
           ),
-          // posts
+          // Postları gösteren bölüm
           Expanded(
             child: StreamBuilder(
               stream:

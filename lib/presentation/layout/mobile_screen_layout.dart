@@ -85,6 +85,9 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     if (_selectedIndex == 2) {
       appBarTitle = 'Notifications';
     }
+    if (_selectedIndex == 3) {
+      appBarTitle = 'Profile';
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -100,7 +103,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           ),
         ),
         actions: [
-          if (_selectedIndex == 3) 
+          if (_selectedIndex == 3)
             IconButton(
                 icon: Image.asset(
                   'assets/icons/settings_icon.png',

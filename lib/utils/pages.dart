@@ -5,11 +5,13 @@ import 'package:tr_guide/presentation/screens/rec_screen.dart';
 import 'package:tr_guide/presentation/screens/notification_screen.dart';
 import 'package:tr_guide/presentation/screens/profile_screen.dart';
 
-List<Widget> homeScreenItems = [
-  const HomeScreen(),
-  const RecScreen(),
-  const NotificationScreen(),
-  const ProfileScreen(
-    //uid: FirebaseAuth.instance.currentUser!.uid,
-  ),
-];
+List<Widget> get homeScreenItems {
+  return [
+    const HomeScreen(),
+    const RecScreen(),
+    const NotificationScreen(),
+    ProfileScreen(
+      uid: FirebaseAuth.instance.currentUser!.uid,
+    ),
+  ];
+}

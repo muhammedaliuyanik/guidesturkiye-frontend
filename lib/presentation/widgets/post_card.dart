@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tr_guide/core/providers/user_provider.dart';
 import 'package:tr_guide/models/post.dart';
+import 'package:tr_guide/presentation/screens/profile_screen.dart';
 import 'package:tr_guide/presentation/widgets/like_animation.dart';
 import 'package:provider/provider.dart';
 import 'package:tr_guide/services/firestore_methods.dart';
@@ -22,6 +23,10 @@ class _PostCardState extends State<PostCard> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).getUser;
 
+    if (user == null) {
+      return SizedBox(); // Veya bir hata mesajı gösterebilirsiniz
+    }
+
     return Padding(
       padding: const EdgeInsets.all(13.0),
       child: ClipRRect(
@@ -32,7 +37,7 @@ class _PostCardState extends State<PostCard> {
               onDoubleTap: () async {
                 await FirestoreMethods().likePost(
                   widget.post.postId,
-                  user!.uid,
+                  user.uid,
                   widget.post.likes,
                 );
                 setState(() {
@@ -65,9 +70,7 @@ class _PostCardState extends State<PostCard> {
                 ],
               ),
             ),
-            // Three dots menu for post owner
-            if (widget.post.uid ==
-                user!.uid) // Show only if the post belongs to the user
+            if (widget.post.uid == user.uid) // Post'un sahibi kullanıcıysa
               Positioned(
                 top: 8,
                 right: 8,
@@ -90,7 +93,7 @@ class _PostCardState extends State<PostCard> {
                               onTap: () async {
                                 await FirestoreMethods()
                                     .deletePost(widget.post.postId);
-                                Navigator.of(context).pop(); // Close the dialog
+                                Navigator.of(context).pop(); // Dialog'u kapat
                               },
                             ),
                           ],
@@ -118,9 +121,21 @@ class _PostCardState extends State<PostCard> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(widget.post.photoUrl),
-                      radius: 36,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfileScreen(
+                              uid: widget.post.uid, // Post sahibinin UID'si
+                            ),
+                          ),
+                        );
+                      },
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(widget.post.photoUrl),
+                        radius: 36,
+                      ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -203,7 +218,7 @@ class _PostCardState extends State<PostCard> {
                           ),
                           iconSize: 22,
                           onPressed: () {
-                            // share functionality
+                            // Share functionality
                           },
                         ),
                       ],

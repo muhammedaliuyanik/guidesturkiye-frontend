@@ -6,3 +6,4 @@ const redColor = Color.fromRGBO(255, 50, 49, 1.0);
 const primaryColor = Colors.white;
 const secondaryColor = Colors.grey;
 const tertiaryColor = Color.fromARGB(90, 158, 158, 158);
+const profileColor = Color.fromARGB(255, 109, 109, 109);
