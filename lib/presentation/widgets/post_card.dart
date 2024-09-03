@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:tr_guide/core/providers/user_provider.dart';
 import 'package:tr_guide/models/post.dart';
 import 'package:tr_guide/presentation/screens/profile_screen.dart';
@@ -6,6 +7,7 @@ import 'package:tr_guide/presentation/widgets/like_animation.dart';
 import 'package:provider/provider.dart';
 import 'package:tr_guide/services/firestore_methods.dart';
 import 'package:intl/intl.dart';
+import 'package:tr_guide/utils/colors.dart';
 
 class PostCard extends StatefulWidget {
   final Post post;
@@ -215,6 +217,18 @@ class _PostCardState extends State<PostCard> {
                             ],
                           ),
                         ),
+                        // SizedBox(
+                        //   height: 25,
+                        //   child: IconButton(
+                        //     icon: const Icon(
+                        //       Icons.share,
+                        //       color: Colors.white,
+                        //     ),
+                        //     iconSize: 22,
+                        //     onPressed: () {
+                        //     },
+                        //   ),
+                        // ),
                         SizedBox(
                           height: 25,
                           child: IconButton(
@@ -224,12 +238,75 @@ class _PostCardState extends State<PostCard> {
                             ),
                             iconSize: 22,
                             onPressed: () {
-                              // Share functionality
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text(
+                                            'Share',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              IconButton(
+                                                icon:
+                                                    const Icon(LineIcons.whatSApp),
+                                                onPressed: () {},
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(
+                                                    LineIcons.twitter),
+                                                onPressed: () {},
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(Icons.copy),
+                                                onPressed: () {},
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Close',
+                                                style: TextStyle(
+                                                  color: redColor,
+                                                )),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
                             },
                           ),
                         ),
+
                         const SizedBox(
-                          height: 5,
+                          height: 10,
                         ),
                       ],
                     ),

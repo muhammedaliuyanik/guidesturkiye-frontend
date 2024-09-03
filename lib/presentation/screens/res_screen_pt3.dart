@@ -207,7 +207,7 @@ class _ResScreenPt3State extends State<ResScreenPt3>
               index: _selectedIndex,
               children: [
                 buildRecommendationsTab(),
-                const Center(child: Text('Top Rated')),
+                buildTopRatedTab(),
               ],
             ),
           ),
@@ -277,6 +277,45 @@ class _ResScreenPt3State extends State<ResScreenPt3>
   // Widget buildTopRatedTab(){
 
   // }
+
+  //top rated
+  Widget buildTopRatedTab() {
+    return FutureBuilder<List<dynamic>>(
+      future: _recommendations,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No recommendations available.'));
+        }
+
+        final recommendations = snapshot.data!;
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 13,
+              mainAxisSpacing: 13,
+              childAspectRatio: 2 / 3,
+            ),
+            itemCount: recommendations.length,
+            itemBuilder: (context, index) {
+              final place = recommendations[index];
+              return buildLocationCard(
+                place['location_name'] ?? 'Unknown',
+                place['city'] ?? 'Unknown',
+                'http://52.59.198.77:5000/images/${place['place_id']}',
+                place,
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 
   Widget buildLocationCard(
       String title, String city, String imageUrl, Map<String, dynamic> place) {

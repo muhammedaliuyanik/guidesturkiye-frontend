@@ -183,9 +183,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                     ),
                     const SizedBox(height: 25),
                     TabBar(
+                      labelColor: redColor,
+                      // dividerColor: redColor,
+                      indicatorColor: redColor,
                       controller: tabController,
                       tabs: <Widget>[
-                        const Tab(text: 'My Photos'),
+                        const Tab(
+                          text: 'My Photos',
+                        ),
                         const Tab(text: 'Visited Places'),
                         if (isMyProfile)
                           const Tab(
