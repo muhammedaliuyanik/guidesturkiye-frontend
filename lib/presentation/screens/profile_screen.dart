@@ -20,7 +20,8 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen>
+    with TickerProviderStateMixin {
   bool isLoading = false;
   var userData = {};
   int followers = 0;
@@ -28,9 +29,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isFollowing = false;
   int _selectedIndex = 0;
   int postCount = 0;
+  late final TabController tabController;
 
   @override
   void initState() {
+    tabController = TabController(length: 3, vsync: this);
     super.initState();
     _fetchPostCount();
     getData();
@@ -88,6 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             backgroundColor: Colors.white,
             body: Column(
               children: [
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(left: 22, right: 22),
                   child: Row(
@@ -157,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: CircleAvatar(
-                          radius: 60,
+                          radius: 50,
                           backgroundImage:
                               NetworkImage(userData['photoUrl'] ?? ''),
                         ),
@@ -166,57 +170,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // Wrap the statistics and TabBar inside a Column
+                Column(
                   children: [
-                    _buildStatColumn('Following', following.toString()),
-                    _buildStatColumn('Posts', postCount.toString()),
-                    _buildStatColumn('Followers', followers.toString()),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildStatColumn('Following', following.toString()),
+                        _buildStatColumn('Posts', postCount.toString()),
+                        _buildStatColumn('Followers', followers.toString()),
+                      ],
+                    ),
+                    const SizedBox(height: 25),
+                    TabBar(
+                      controller: tabController,
+                      tabs: <Widget>[
+                        const Tab(text: 'My Photos'),
+                        const Tab(text: 'Visited Places'),
+                        if (isMyProfile)
+                          const Tab(
+                            text: 'Travel Plan',
+                          ),
+                      ],
+                    ),
                   ],
                 ),
-                const SizedBox(height: 25),
-                CustomSlidingSegmentedControl<int>(
-                  initialValue: _selectedIndex,
-                  children: isMyProfile
-                      ? const {
-                          0: Text('My Photos'),
-                          1: Text('Visited Places'),
-                          2: Text('Travel Plan'),
-                        }
-                      : const {
-                          0: Text('Photos'),
-                          1: Text('Visited Places'),
-                        },
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 223, 223, 223),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  thumbDecoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  onValueChanged: (index) {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
+
                 Expanded(
-                  child: IndexedStack(
-                    index: _selectedIndex,
-                    children: isMyProfile
-                        ? [
-                            MyPhotosTab(uid: widget.uid),
-                            VisitedPlacesTab(uid: widget.uid),
-                            TravelPlanTab(uid: widget.uid),
-                          ]
-                        : [
-                            MyPhotosTab(uid: widget.uid),
-                            VisitedPlacesTab(uid: widget.uid),
-                          ],
+                  child: TabBarView(
+                    controller: tabController,
+                    children: <Widget>[
+                      MyPhotosTab(uid: widget.uid),
+                      VisitedPlacesTab(uid: widget.uid),
+                      if (isMyProfile) TravelPlanTab(uid: widget.uid),
+                    ],
                   ),
                 ),
               ],

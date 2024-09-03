@@ -46,66 +46,76 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
 
-                return SizedBox(
-                  height: 92,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (ctx, index) {
-                      var user = snapshot.data!.docs[index].data();
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.purple,
-                                          Colors.red,
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                    ),
-                                    padding: const EdgeInsets.all(2),
-                                    child: CircleAvatar(
-                                      radius: 35,
-                                      backgroundImage:
-                                          NetworkImage(user['photoUrl']),
-                                    ),
-                                  ),
-                                  // Profil ekranına yönlendirme
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ProfileScreen(
-                                          uid: snapshot.data!.docs[index]
-                                              .id, // Post sahibinin UID'si
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: SizedBox(
+                    height: 92,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (ctx, index) {
+                        var user = snapshot.data!.docs[index].data();
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.purple,
+                                            Colors.red,
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
                                         ),
                                       ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                            Text(
-                              user['name'],
-                              style: const TextStyle(
-                                fontSize: 11,
+                                      padding: const EdgeInsets.all(2),
+                                      child: CircleAvatar(
+                                        radius: 35,
+                                        backgroundImage:
+                                            NetworkImage(user['photoUrl']),
+                                      ),
+                                    ),
+                                    // Profil ekranına yönlendirme
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ProfileScreen(
+                                            uid: snapshot.data!.docs[index]
+                                                .id, // Post sahibinin UID'si
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                              SizedBox(
+                                width: 70,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      user['name'],
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 );
               },
@@ -128,16 +138,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (ctx, index) => Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: width > size ? width * 0.3 : 0,
-                      vertical: width > size ? 15 : 0,
-                    ),
-                    child: PostCard(
-                      post: Post.fromSnap(snapshot.data!.docs[index]),
-                    ),
-                  ),
-                );
+                  itemBuilder: (ctx, index) => PostCard(
+                      post: Post.fromSnap(snapshot.data!.docs[index]),),
+                    );
               },
             ),
           ),

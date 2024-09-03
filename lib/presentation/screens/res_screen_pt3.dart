@@ -82,14 +82,14 @@ class _ResScreenPt3State extends State<ResScreenPt3>
           .collection('users')
           .doc(user!.uid)
           .collection('travelPlans')
-          .doc(); // Automatically generates a unique ID for the document
+          .doc();
 
       await travelPlanRef.set({
         'selectedPlaces': selectedRecommendations,
         'createdAt': Timestamp.now(),
       });
 
-      // Fetch user's name and profile image for the notification
+
       var userSnap = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
@@ -97,11 +97,11 @@ class _ResScreenPt3State extends State<ResScreenPt3>
       var name = userSnap['name'];
       var userProfileImg = userSnap['photoUrl'];
 
-      // Add a notification for the travel plan
+
       await addNotification(
         user.uid,
         'travel_plan',
-        '', // No specific postId associated
+        '',
         name,
         userProfileImg,
       );
@@ -113,7 +113,7 @@ class _ResScreenPt3State extends State<ResScreenPt3>
 
         setState(() {
           _isAdded =
-              true; // Change the button state to indicate it has been clicked
+              true;
         });
       }
     } catch (e) {
@@ -274,6 +274,9 @@ class _ResScreenPt3State extends State<ResScreenPt3>
       },
     );
   }
+  // Widget buildTopRatedTab(){
+
+  // }
 
   Widget buildLocationCard(
       String title, String city, String imageUrl, Map<String, dynamic> place) {

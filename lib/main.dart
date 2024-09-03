@@ -20,7 +20,7 @@ void main() async {
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  await Future.delayed(const Duration(seconds: 2)); //cok mu uzun oldu
+  await Future.delayed(const Duration(seconds: 5)); //cok mu uzun oldu
 
   FlutterNativeSplash.remove();
 

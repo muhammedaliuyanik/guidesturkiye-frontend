@@ -28,7 +28,7 @@ class _PostCardState extends State<PostCard> {
     }
 
     return Padding(
-      padding: const EdgeInsets.all(13.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Stack(
@@ -93,7 +93,7 @@ class _PostCardState extends State<PostCard> {
                               onTap: () async {
                                 await FirestoreMethods()
                                     .deletePost(widget.post.postId);
-                                Navigator.of(context).pop(); // Dialog'u kapat
+                                Navigator.of(context).pop();
                               },
                             ),
                           ],
@@ -127,7 +127,7 @@ class _PostCardState extends State<PostCard> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProfileScreen(
-                              uid: widget.post.uid, // Post sahibinin UID'si
+                              uid: widget.post.uid,
                             ),
                           ),
                         );
@@ -143,7 +143,7 @@ class _PostCardState extends State<PostCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.post.location,
+                            widget.post.location.split(",")[0],
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -163,7 +163,7 @@ class _PostCardState extends State<PostCard> {
                             widget.post.name,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -176,30 +176,34 @@ class _PostCardState extends State<PostCard> {
                         LikeAnimation(
                           isAnimating: widget.post.likes.contains(user.uid),
                           smallLike: true,
-                          child: Row(
+                          child: Column(
                             children: [
-                              IconButton(
-                                icon: widget.post.likes.contains(user.uid)
-                                    ? const Icon(
-                                        Icons.favorite,
-                                        color: Colors.red,
-                                      )
-                                    : const Icon(
-                                        Icons.favorite_border,
-                                        color: Colors.white,
-                                      ),
-                                iconSize: 23,
-                                onPressed: () async {
-                                  await FirestoreMethods().likePost(
-                                    widget.post.postId,
-                                    user.uid,
-                                    widget.post.likes,
-                                  );
-                                  setState(() {
-                                    isLikeAnimating = true;
-                                  });
-                                },
+                              SizedBox(
+                                height: 25,
+                                child: IconButton(
+                                  icon: widget.post.likes.contains(user.uid)
+                                      ? const Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        )
+                                      : const Icon(
+                                          Icons.favorite_border,
+                                          color: Colors.white,
+                                        ),
+                                  iconSize: 23,
+                                  onPressed: () async {
+                                    await FirestoreMethods().likePost(
+                                      widget.post.postId,
+                                      user.uid,
+                                      widget.post.likes,
+                                    );
+                                    setState(() {
+                                      isLikeAnimating = true;
+                                    });
+                                  },
+                                ),
                               ),
+                              const SizedBox(height: 5),
                               Text(
                                 '${widget.post.likes.length}',
                                 style: const TextStyle(
@@ -211,15 +215,21 @@ class _PostCardState extends State<PostCard> {
                             ],
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.share,
-                            color: Colors.white,
+                        SizedBox(
+                          height: 25,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.share,
+                              color: Colors.white,
+                            ),
+                            iconSize: 22,
+                            onPressed: () {
+                              // Share functionality
+                            },
                           ),
-                          iconSize: 22,
-                          onPressed: () {
-                            // Share functionality
-                          },
+                        ),
+                        const SizedBox(
+                          height: 5,
                         ),
                       ],
                     ),

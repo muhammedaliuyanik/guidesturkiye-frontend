@@ -78,16 +78,16 @@ class _RecScreenState extends State<RecScreen> {
                         });
                       }),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 18),
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
                         "Please select the city you plan to visit before we suggest locations. Based on your selection, we will recommend places in that city.",
                         textAlign: TextAlign.justify,
-                        style: TextStyle(color: Colors.black54, fontSize: 16),
+                        style: TextStyle(color: Colors.black54, fontSize: 14),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 18),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: _buildDropdownButton(

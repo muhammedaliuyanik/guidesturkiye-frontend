@@ -112,11 +112,11 @@ class _RecScreenPt2State extends State<RecScreenPt2> {
                 height: 80,
                 alignment: Alignment.center,
                 child: const Text(
-                  "Select locations to explore.",
+                  "Please select at least 5 locations to get recommendations.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color.fromARGB(255, 89, 78, 55),
-                    fontSize: 20,
+                    fontSize: 18,
                   ),
                 ),
               ),
