@@ -178,7 +178,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
           style: TextStyle(color: redColor, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
+      body: isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(defaultPadding),
           child: Column(

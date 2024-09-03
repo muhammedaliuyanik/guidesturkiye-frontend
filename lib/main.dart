@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:tr_guide/core/providers/notification_provider.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tr_guide/core/providers/theme_provider.dart';
 import 'package:tr_guide/core/providers/user_provider.dart';
 import 'package:tr_guide/presentation/onboarding/onboarding_view.dart';
@@ -15,8 +15,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
-  //final prefs = await SharedPreferences.getInstance();
-  //final onboarding = prefs.getBool("onboarding") ?? false;
+  final prefs = await SharedPreferences.getInstance();
+  final onboarding = prefs.getBool("onboarding") ?? false;
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
@@ -25,7 +25,7 @@ void main() async {
   FlutterNativeSplash.remove();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  //runApp(MyApp(onboarding: onboarding));
+  runApp(MyApp(onboarding: onboarding));
   runApp(const MyApp());
 }
 

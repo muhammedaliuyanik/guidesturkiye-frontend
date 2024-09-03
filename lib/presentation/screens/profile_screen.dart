@@ -58,8 +58,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (userSnap.exists) {
         setState(() {
           userData = userSnap.data()!;
-          //postun lengthi
-          // posts = userData['posts']?.length ?? 0; //calismadi
           followers = userData['followers'].length;
           following = userData['following'].length;
           isFollowing = userData['followers']
@@ -179,11 +177,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 25),
                 CustomSlidingSegmentedControl<int>(
                   initialValue: _selectedIndex,
-                  children: const {
-                    0: Text(' My Photos '),
-                    1: Text(' Visited Places '),
-                    2: Text(' Travel Plan '),
-                  },
+                  children: isMyProfile
+                      ? const {
+                          0: Text('My Photos'),
+                          1: Text('Visited Places'),
+                          2: Text('Travel Plan'),
+                        }
+                      : const {
+                          0: Text('Photos'),
+                          1: Text('Visited Places'),
+                        },
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 223, 223, 223),
                     borderRadius: BorderRadius.circular(10),
@@ -204,11 +207,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Expanded(
                   child: IndexedStack(
                     index: _selectedIndex,
-                    children: [
-                      MyPhotosTab(uid: widget.uid),
-                      VisitedPlacesTab(uid: widget.uid),
-                      TravelPlanTab(uid: widget.uid),
-                    ],
+                    children: isMyProfile
+                        ? [
+                            MyPhotosTab(uid: widget.uid),
+                            VisitedPlacesTab(uid: widget.uid),
+                            TravelPlanTab(uid: widget.uid),
+                          ]
+                        : [
+                            MyPhotosTab(uid: widget.uid),
+                            VisitedPlacesTab(uid: widget.uid),
+                          ],
                   ),
                 ),
               ],
