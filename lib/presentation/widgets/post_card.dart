@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:tr_guide/services/firestore_methods.dart';
 import 'package:intl/intl.dart';
 import 'package:tr_guide/utils/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 
 class PostCard extends StatefulWidget {
   final Post post;
@@ -49,8 +51,11 @@ class _PostCardState extends State<PostCard> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Image.network(
-                    widget.post.postPhotoUrl,
+                  CachedNetworkImage(
+                    imageUrl: widget.post.postPhotoUrl,
+                    placeholder: (context, url) => const CircularProgressIndicator(color:  Color.fromARGB(76, 158, 158, 158),),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+
                     height: 360,
                     width: double.infinity,
                     fit: BoxFit.cover,

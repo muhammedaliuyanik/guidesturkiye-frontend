@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
@@ -80,11 +81,14 @@ class _LocationDetailsPageState extends State<LocationDetailsPage> {
             Stack(
               alignment: Alignment.center,
               children: [
-                Image.network(
-                  'http://52.59.198.77:5000/images/${widget.place['place_id']}',
+                CachedNetworkImage(
+                  imageUrl:
+                      'http://52.59.198.77:5000/images/${widget.place['place_id']}',
                   width: double.infinity,
                   height: 250,
                   fit: BoxFit.cover,
+                  placeholder: (context, url) => const CircularProgressIndicator(color:  Color.fromARGB(71, 158, 158, 158),),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
                 Positioned(
                   bottom: 0,
